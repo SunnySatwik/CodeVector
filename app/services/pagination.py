@@ -3,7 +3,6 @@ import json
 
 
 def encode_cursor(updated_at, product_id):
-
     payload = {
         "updated_at": updated_at.isoformat(),
         "id": product_id
@@ -15,9 +14,6 @@ def encode_cursor(updated_at, product_id):
 
 
 def decode_cursor(cursor):
-
-    decoded = json.loads(
+    return json.loads(
         base64.b64decode(cursor).decode()
     )
-
-    return decoded
