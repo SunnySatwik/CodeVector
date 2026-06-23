@@ -18,6 +18,13 @@ Standard `OFFSET` pagination breaks down when rows are added or removed between 
 2. **Snapshot consistency** — a timestamp is captured on the first request and reused for all subsequent pages, so the user always sees the data as it was when they started browsing.
 
 ---
+## Live API
+
+Base URL:
+https://codevector-uoaj.onrender.com
+
+Interactive API Documentation:
+https://codevector-uoaj.onrender.com/docs
 
 ## Features
 
