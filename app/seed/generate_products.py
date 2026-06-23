@@ -1,10 +1,10 @@
-from faker import Faker
+
 from datetime import datetime, timedelta
 from sqlalchemy import text
-
+import random
 from app.database import engine
+print("SCRIPT STARTED")
 
-fake = Faker()
 
 CATEGORIES = [
     "electronics",
@@ -16,7 +16,7 @@ CATEGORIES = [
     "toys"
 ]
 
-TOTAL_PRODUCTS = 200_000
+TOTAL_PRODUCTS = 50000
 BATCH_SIZE = 5000
 
 
@@ -25,20 +25,16 @@ def generate_batch(size):
 
     rows = []
 
-    for _ in range(size):
+    for i in range(size):
         created = now - timedelta(
-            days=fake.random_int(min=0, max=365)
+            days=random.randint(0, 365)
         )
 
         rows.append(
             {
-                "name": fake.word().title() + " Product",
-                "category": fake.random_element(CATEGORIES),
-                "price": round(fake.pyfloat(
-                    left_digits=4,
-                    right_digits=2,
-                    positive=True
-                ), 2),
+                "name": f"Product {i}",
+                "category": random.choice(CATEGORIES),
+                "price": round(random.uniform(10, 10000), 2),
                 "created_at": created,
                 "updated_at": created
             }
@@ -54,7 +50,11 @@ def seed():
 
         while inserted < TOTAL_PRODUCTS:
 
+            print("Generating batch...")
+
             batch = generate_batch(BATCH_SIZE)
+
+            print("Batch generated")
 
             conn.execute(
                 text("""
@@ -67,13 +67,11 @@ def seed():
                 batch
             )
 
-            inserted += BATCH_SIZE
+            print("Batch inserted")
 
-            print(
-                f"{inserted}/{TOTAL_PRODUCTS} inserted"
-            )
+            inserted += len(batch)
 
-    print("Done")
+            print(f"{inserted:,}/{TOTAL_PRODUCTS:,} inserted")
 
 
 if __name__ == "__main__":
