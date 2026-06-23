@@ -5,7 +5,7 @@ A backend API for browsing a product catalog with cursor-based pagination and sn
 [![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=flat&logo=python&logoColor=white)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-latest-009688?style=flat&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Supabase-4169E1?style=flat&logo=postgresql&logoColor=white)](https://supabase.com/)
-
+[![Render](https://img.shields.io/badge/Hosted%20on-Render-46E3B7?style=flat&logo=render&logoColor=white)](https://render.com/)
 ---
 
 ## Overview
@@ -306,7 +306,7 @@ Page N: GET /products?cursor=<next_cursor>&snapshot=<snapshot>
 It's simple to implement but unreliable with live data. Products can appear twice or get skipped when rows are inserted or deleted between requests. For a catalog that could change at any time, this isn't acceptable.
 
 **Why cursor (keyset) pagination?**  
-The cursor encodes a position in the sort order, not a row count. New inserts or deletes elsewhere in the table don't affect it. The queries also use `(updated_at, id)` as the sort key, which means the database can use an index to find the next page directly rather than scanning from the start.
+The cursor encodes a position in the sort order, not a row count. New inserts or deletes elsewhere in the table don't affect it. The queries use (updated_at, id) as the sort key, allowing efficient cursor-based navigation through the dataset.
 
 **Why add snapshot consistency on top?**  
 Cursor pagination alone doesn't account for rows that change their sort position mid-session (i.e. rows whose `updated_at` gets updated). The snapshot timestamp locks in the visible dataset at session start, so even if a product is re-indexed in the background, it won't affect the current browsing session.
